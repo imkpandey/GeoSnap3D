@@ -11,8 +11,8 @@ const App = () => {
   const mapContainerRef = useRef(null);
   const [map, setMap] = useState(null);
   const [location, setLocation] = useState({
-    longitude: 77.1,
-    latitude: 28.6,
+    longitude: 77.19,
+    latitude: 28.61,
   });
   const [zoom, setZoom] = useState(10);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -58,7 +58,6 @@ const App = () => {
     setCapturedImage(response.url);
     return response.url;
   };
-  
 
   return (
     <div className="flex h-screen">
