@@ -5,12 +5,13 @@ const Cuboid3D = ({ capturedImage }) => {
   const canvasRef = useRef(null);
   const sceneRef = useRef(null);
   const engineRef = useRef(null);
+  const boxRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      const engine = new BABYLON.Engine(canvas, true);
-      const createScene = () => {
+      if (!sceneRef.current) {
+        const engine = new BABYLON.Engine(canvas, true);
         const scene = new BABYLON.Scene(engine);
         scene.clearColor = new BABYLON.Color4(0, 0, 0, 0);
         sceneRef.current = scene;
@@ -35,38 +36,32 @@ const Cuboid3D = ({ capturedImage }) => {
 
         const box = BABYLON.MeshBuilder.CreateBox("box", { size: 2 }, scene);
         box.position.y = 1;
-
-        const boxMaterial = new BABYLON.StandardMaterial("boxMaterial", scene);
-        boxMaterial.diffuseTexture = new BABYLON.Texture(
-          capturedImage,
-          scene
-        );
-        box.material = boxMaterial;
-
-        return scene;
-      };
-
-      const initializeScene = () => {
-        const scene = createScene();
-        engineRef.current = engine;
+        boxRef.current = box;
 
         engine.runRenderLoop(() => {
           scene.render();
         });
-      };
 
-      initializeScene();
+        engineRef.current = engine;
 
-      window.addEventListener("resize", () => {
-        engine.resize();
-      });
+        window.addEventListener("resize", () => {
+          engine.resize();
+        });
+      }
+    }
+  }, []);
 
-      return () => {
-        if (engineRef.current) {
-          engineRef.current.stopRenderLoop();
-          engineRef.current.dispose();
-        }
-      };
+  useEffect(() => {
+    if (boxRef.current && capturedImage) {
+      const boxMaterial = new BABYLON.StandardMaterial(
+        "boxMaterial",
+        sceneRef.current
+      );
+      boxMaterial.diffuseTexture = new BABYLON.Texture(
+        capturedImage,
+        sceneRef.current
+      );
+      boxRef.current.material = boxMaterial;
     }
   }, [capturedImage]);
 

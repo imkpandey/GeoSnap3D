@@ -50,13 +50,13 @@ const App = () => {
   }, [location, zoom, map]);
 
   const captureMap = async () => {
-    const longitude = location.longitude
-    const latitude = location.latitude
+    const longitude = location.longitude;
+    const latitude = location.latitude;
     const response = await fetch(
       `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoom}/800x800?access_token=${MAPBOX_TOKEN}`
     );
-    setCapturedImage(response.url);
-    return response.url;
+    const capturedImageUrl = response.url;
+    setCapturedImage(capturedImageUrl);
   };
 
   return (
@@ -71,11 +71,9 @@ const App = () => {
             Capture Map
           </button>
         </div>
-        {capturedImage && (
-          <div className="flex p-4 h-full">
-            <Cuboid3D capturedImage={capturedImage} />
-          </div>
-        )}
+        <div className="flex p-4 h-full">
+          <Cuboid3D capturedImage={capturedImage} />
+        </div>
       </div>
     </div>
   );
